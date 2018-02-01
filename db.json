@@ -47,7 +47,7 @@
 		"local_tz_short":"GMT",
 		"local_tz_long":"Europe/London",
 		"local_tz_offset":"+0000",
-		"weather":"Rain",
+		"weather":"Sunny",
 		"temperature_string":"36.7 F (2.6 C)",
 		"temp_f":36.7,
 		"temp_c":2.6,
