@@ -36,15 +36,15 @@ const char *srCheck;
 #include <ArduinoJson.h>
 
 //wifi name and pass
-const char SSID[]     = "-";//
-const char PASSWORD[] = "---------";//
+const char SSID[]     = "--";//
+const char PASSWORD[] = "--";//
 
 // Use your own API key by signing up for a free developer account.
 // http://www.wunderground.com/weather/api/
-#define WU_API_KEY "-----------"
+#define WU_API_KEY "---"
 
 // Specify your favorite location one of these ways.
-#define WU_LOCATION "-------------"
+#define WU_LOCATION "----"
 
 
 // 30 minutes between update checks. The free developer account has a limit
@@ -63,7 +63,7 @@ const char PASSWORD[] = "---------";//
 const char WUNDERGROUND_REQ[] =
     //"GET /api/" WU_API_KEY "/conditions/q/" WU_LOCATION ".json HTTP/1.1\r\n"
     //debug jsonserver
-    "GET -----------------"
+    "GET --"
     "User-Agent: ESP8266/0.1\r\n"
     "Accept: */*\r\n"
     "Host: "WUNDERGROUND"\r\n"
@@ -306,7 +306,7 @@ bool showWeather(char *json)
     }
     else
     {
-     Serial.println("yay its double digit positive"); 
+     Serial.println("its double digit positive"); 
      float temp_c_double_p  = temp_c * 10; 
      int temp_c_double_p_final = floor(temp_c_double_p/100); 
      int temp_c_double_p_final_2nd_digit = floor((temp_c_double_p -(temp_c_double_p_final * 100))/10); 
@@ -349,7 +349,7 @@ bool showWeather(char *json)
   handleCondition(weather);
   return true;
 }
-//function to create a manual decimal layout for numbers 0-9 example 1 would be "1."
+//array for DecimalNumber function 
 uint8_t layout[10] = 
 {
   B10111111,
@@ -363,7 +363,7 @@ uint8_t layout[10] =
   B11111111,
   B11101111,
   };
-  
+//function to create a manual decimal layout for numbers 0-9 example 1 would be "1."  
 uint8_t DecimalNumber (int number)
 {
   if(number >= 0 && number <= 8) return layout[number];
