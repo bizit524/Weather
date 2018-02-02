@@ -32,19 +32,19 @@ float greenStates[PIXEL_COUNT];
 float whiteStates[PIXEL_COUNT];
 
 //setup for snowandrain function
-const char srCheck;
+const char *srCheck;
 #include <ArduinoJson.h>
 
 //wifi name and pass
-const char SSID[]     = "---------
-const char PASSWORD[] = "---------------
+const char SSID[]     = "-";//
+const char PASSWORD[] = "---------";//
 
 // Use your own API key by signing up for a free developer account.
 // http://www.wunderground.com/weather/api/
-#define WU_API_KEY "----------"
+#define WU_API_KEY "-----------"
 
 // Specify your favorite location one of these ways.
-#define WU_LOCATION "-------"
+#define WU_LOCATION "-------------"
 
 
 // 30 minutes between update checks. The free developer account has a limit
@@ -63,7 +63,7 @@ const char PASSWORD[] = "---------------
 const char WUNDERGROUND_REQ[] =
     //"GET /api/" WU_API_KEY "/conditions/q/" WU_LOCATION ".json HTTP/1.1\r\n"
     //debug jsonserver
-    "GET /--------------"
+    "GET -----------------"
     "User-Agent: ESP8266/0.1\r\n"
     "Accept: */*\r\n"
     "Host: "WUNDERGROUND"\r\n"
@@ -206,6 +206,7 @@ void loop()
     delay(DELAY_ERROR);
   }
 
+ 
 }
 
 bool showWeather(char *json)
@@ -349,59 +350,25 @@ bool showWeather(char *json)
   return true;
 }
 //function to create a manual decimal layout for numbers 0-9 example 1 would be "1."
+uint8_t layout[10] = 
+{
+  B10111111,
+  B10000110,
+  B11011011,
+  B11001111,
+  B11100110,
+  B11101101,
+  B11111101,
+  B10000111,
+  B11111111,
+  B11101111,
+  };
+  
 uint8_t DecimalNumber (int number)
 {
-  uint8_t seven_seg_value = 0;
-  if (number == 0)
-  {
-    seven_seg_value = B10111111;
-    return seven_seg_value;
-  }
-  else if (number == 1)
-  {
-    seven_seg_value = B10000110;
-    return seven_seg_value;    
-  }
-  else if (number == 2)
-  {
-    seven_seg_value = B11011011;
-    return seven_seg_value;    
-  }
-  else if (number == 3)
-  {
-    seven_seg_value = B11001111;
-    return seven_seg_value;   
-  }
-  else if (number == 4)
-  {
-    seven_seg_value = B11100110;
-    return seven_seg_value;   
-  }
-  else if (number == 5)
-  {
-     seven_seg_value = B11101101;
-    return seven_seg_value;   
-  }
-  else if (number == 6)
-  {
-    seven_seg_value = B11111101;
-    return seven_seg_value;    
-    }
-  else if (number == 7)
-  {
-    seven_seg_value = B10000111;
-    return seven_seg_value;   
-  }
-  else if (number == 8)
-  {
-    seven_seg_value = B11111111;
-    return seven_seg_value;   
-  }
-  else 
-  {
-    seven_seg_value = B11101111;
-    return seven_seg_value;   
-  }
+  if(number >= 0 && number <= 8) return layout[number];
+  // otherwise return layout[9]
+  return layout[9];
 }
 
 //divdies pixels up into sections of the triangles then passes the RGBW vaules and sets them 
@@ -589,11 +556,11 @@ void SnowandRain(const char *WeatherType, const char *Speed)
     {
        fadeRate = 0.97;
     }
-   while (srCheck == "Rain")
+   while (strcmp(srCheck,WeatherType)==0)
    { 
     
     //debug what is being passed 
-    Serial.println(WeatherType);
+    //Serial.println(WeatherType);
     //Serial.println(Speed);
 
     if (random(PIXEL_COUNT) == 1) {
