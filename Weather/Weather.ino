@@ -10,8 +10,9 @@
 #include "Adafruit_NeoPixel.h"
 //wifi library
 #include <ESP8266WiFi.h>
-
-
+#include <WiFiManager.h>
+#include <DNSServer.h>
+#include <ESP8266WebServer.h>
 
 //set pins for display
 #define CLK 2//pins definitions for TM1637 and can be changed to other ports       
@@ -35,21 +36,17 @@ float whiteStates[PIXEL_COUNT];
 const char *srCheck;
 #include <ArduinoJson.h>
 
-//wifi name and pass
-const char SSID[]     = "--";//
-const char PASSWORD[] = "--";//
-
 // Use your own API key by signing up for a free developer account.
 // http://www.wunderground.com/weather/api/
-#define WU_API_KEY "---"
+#define WU_API_KEY ""
 
 // Specify your favorite location one of these ways.
-#define WU_LOCATION "----"
+#define WU_LOCATION ""
 
 
 // 30 minutes between update checks. The free developer account has a limit
 // on the  number of calls so don't go wild.
-//#define DELAY_NORMAL    (20*60*1000)
+//#define DELAY_NORMAL    (10*60*1000)
 //debug time 
 #define DELAY_NORMAL    (10*1*1000)
 // 60 minute delay between updates after an error
@@ -63,7 +60,7 @@ const char PASSWORD[] = "--";//
 const char WUNDERGROUND_REQ[] =
     //"GET /api/" WU_API_KEY "/conditions/q/" WU_LOCATION ".json HTTP/1.1\r\n"
     //debug jsonserver
-    "GET --"
+    "GET----"
     "User-Agent: ESP8266/0.1\r\n"
     "Accept: */*\r\n"
     "Host: "WUNDERGROUND"\r\n"
@@ -82,7 +79,7 @@ void handleCondition(String weather1);
 
 void setup()
 {
-  
+
   // Initialize NeoPixels and turn them off.
   pixels.begin();
   lightPixels(pixels.Color(0, 0, 0, 0));
@@ -106,20 +103,10 @@ void setup()
 
 
   // We start by connecting to a WiFi network
+  WiFiManager MyWifiManager;
+  MyWifiManager.autoConnect("WeatherFrame");
   Serial.println();
-  Serial.println();
-  Serial.print(F("Connecting to "));
-  Serial.println(SSID);
-  WiFi.begin(SSID, PASSWORD);
-  while (WiFi.status() != WL_CONNECTED) 
-  {
-    delay(500);
-    Serial.print(F("."));
-  }
-  Serial.println();
-  Serial.println(F("WiFi connected"));
-  Serial.println(F("IP address: "));
-  Serial.println(WiFi.localIP());
+
 }
 
 static char respBuf[4096];
@@ -349,6 +336,8 @@ bool showWeather(char *json)
   handleCondition(weather);
   return true;
 }
+
+
 //array for DecimalNumber function 
 uint8_t layout[10] = 
 {
@@ -384,10 +373,8 @@ void PixelSet(int section, int G, int R, int B, int W)
     {
     pixels.setPixelColor( i, pixels.Color(G,R,B,W));
     //Serial.println (i);
-    i++;
-    
+    i++;   
     }
-
   }
   
   if (section == 2)
@@ -399,7 +386,6 @@ void PixelSet(int section, int G, int R, int B, int W)
     i++;
     //Serial.println (i);
     }
-  
   }
   
   if (section == 3)
@@ -411,8 +397,7 @@ void PixelSet(int section, int G, int R, int B, int W)
     i++;
     //Serial.println (i);
     }
-  }    
-  
+  }      
 }
 
 
@@ -483,7 +468,9 @@ void handleCondition(String weather1)
     Serial.println("snow in the forecast today");
     const char *fast = "fast";
     const char *snow = "Snow";
+    if (strcmp(srCheck,snow) == 0){
     SnowandRain(snow, fast);
+    };
    /* pixels.setPixelColor(0, pixels.Color(0, 30, 175, 100));
     pixels.setPixelColor(1, pixels.Color(0, 30, 175, 100));
     pixels.setPixelColor(2, pixels.Color(0, 30, 175, 100));
@@ -556,8 +543,6 @@ void SnowandRain(const char *WeatherType, const char *Speed)
     {
        fadeRate = 0.97;
     }
-   while (strcmp(srCheck,WeatherType)==0)
-   { 
     
     //debug what is being passed 
     //Serial.println(WeatherType);
@@ -638,7 +623,5 @@ void SnowandRain(const char *WeatherType, const char *Speed)
         if (Speed == "slow")
         {
           delay(15);
-        }
-    
-  } 
+        } 
 }
