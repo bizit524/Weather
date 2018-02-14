@@ -1,4 +1,5 @@
-
+// For storing configurations
+#include <FS.h>
 #include <Arduino.h>
 
 //setup tm1637 display
@@ -36,14 +37,8 @@ float whiteStates[PIXEL_COUNT];
 const char *srCheck;
 #include <ArduinoJson.h>
 
-// Use your own API key by signing up for a free developer account.
-// http://www.wunderground.com/weather/api/
-#define WU_API_KEY ""
-
-// Specify your favorite location one of these ways.
-#define WU_LOCATION ""
-
-
+const char *Night_Mode;
+const char *CorF;
 // 30 minutes between update checks. The free developer account has a limit
 // on the  number of calls so don't go wild.
 //#define DELAY_NORMAL    (10*60*1000)
@@ -55,12 +50,18 @@ const char *srCheck;
 //#define WUNDERGROUND "api.wunderground.com"
 //debug json server
 #define WUNDERGROUND "my-json-server.typicode.com"
+// Specify your favorite location one of these ways.
+#define WU_LOCATION "G"
+// Use your own API key by signing up for a free developer account.
+// http://www.wunderground.com/weather/api/
+#define WU_API_KEY ""
+
 
 // HTTP request
 const char WUNDERGROUND_REQ[] =
     //"GET /api/" WU_API_KEY "/conditions/q/" WU_LOCATION ".json HTTP/1.1\r\n"
     //debug jsonserver
-    "GET----"
+    "GET ------HTTP/1.1\r\n"
     "User-Agent: ESP8266/0.1\r\n"
     "Accept: */*\r\n"
     "Host: "WUNDERGROUND"\r\n"
@@ -92,20 +93,19 @@ void setup()
   display.setSegments(data);
   //start serial
   Serial.begin(115200);
-  //setup for SnowandRain function
-  for(uint16_t l = 0; l < PIXEL_COUNT; l++) 
-  {
-    redStates[l] = 0;
-    greenStates[l] = 0;
-    blueStates[l] = 0;
-    whiteStates[l] = 0;
-  }
 
 
+  // The extra parameters to be configured (can be either global or just in the setup)
+  // After connecting, parameter.getValue() will get you the configured value
+  // id/name placeholder/prompt default length
+  WiFiManagerParameter WUnderground_API("Weather Underground API Key", "Weather Underground API Key", WU_API_KEY, 16);
+  WiFiManagerParameter WULocation("Weather Underground Location", "Weather Underground Location", WU_LOCATION, 40);
+  WiFiManagerParameter Night_M("Night Mode On?", "YES", Night_Mode, 5);
+  WiFiManagerParameter Temp_CF("Temperature", "Celsius or Fahrenheit?", CorF, 12);
   // We start by connecting to a WiFi network
   WiFiManager MyWifiManager;
   MyWifiManager.autoConnect("WeatherFrame");
-  Serial.println();
+
 
 }
 
@@ -336,8 +336,32 @@ bool showWeather(char *json)
   handleCondition(weather);
   return true;
 }
-
-
+//calclation to find individual digits to put into the data array String_length is length of what temp_string_legnth is, calc_temp is the current temp passed into do calculation,
+//digit_return is what digit you want returned out of the possible 1-3 example temp is 23.4 degrees c you want the second digit returned, it would return 3
+//negative_check is 1 or 0 , 1 is yes it is negative 0 is no
+int DigitCalculation(int string_length,float calc_temp, int digit_return,int negative_check)
+{
+  //for 
+  if (string_length == 3)
+  {
+    
+  }
+  else if (string_length == 4)
+  {
+    //for negative single digits
+    if (negative_check == 1)
+    {}
+    else 
+    
+  }
+  else if (string_length == 5)
+  {
+    
+  }
+  
+  
+  
+}
 //array for DecimalNumber function 
 uint8_t layout[10] = 
 {
@@ -529,7 +553,14 @@ void handleCondition(String weather1)
 
 void SnowandRain(const char *WeatherType, const char *Speed)
 {
-  
+    //setup for SnowandRain function
+  for(uint16_t l = 0; l < PIXEL_COUNT; l++) 
+  {
+    redStates[l] = 0;
+    greenStates[l] = 0;
+    blueStates[l] = 0;
+    whiteStates[l] = 0;
+  }
   Serial.print("its ");
   Serial.print(srCheck);
   Serial.print(" still, ");
