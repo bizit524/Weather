@@ -27,6 +27,7 @@ TM1637Display display(CLK, DIO);
 #define PIXEL_TYPE      NEO_GRBW + NEO_KHZ800   // Type of the NeoPixels (see strandtest example).
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(PIXEL_COUNT, PIXEL_PIN, PIXEL_TYPE); // create NeoPixels object
 
+
 // setup arrays for SnowandRain function
 float redStates[PIXEL_COUNT];
 float blueStates[PIXEL_COUNT];
@@ -51,17 +52,17 @@ const char *CorF;
 //debug json server
 #define WUNDERGROUND "my-json-server.typicode.com"
 // Specify your favorite location one of these ways.
-#define WU_LOCATION "G"
+#define WU_LOCATION "GB/EDINBURGH"
 // Use your own API key by signing up for a free developer account.
 // http://www.wunderground.com/weather/api/
-#define WU_API_KEY ""
+#define WU_API_KEY "0ffe1bdd0cf876d6"
 
 
 // HTTP request
 const char WUNDERGROUND_REQ[] =
     //"GET /api/" WU_API_KEY "/conditions/q/" WU_LOCATION ".json HTTP/1.1\r\n"
     //debug jsonserver
-    "GET ------HTTP/1.1\r\n"
+    "GET /bizit524/Weather/db HTTP/1.1\r\n"
     "User-Agent: ESP8266/0.1\r\n"
     "Accept: */*\r\n"
     "Host: "WUNDERGROUND"\r\n"
