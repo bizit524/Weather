@@ -1,22 +1,28 @@
 
-#ifdef ESP8266
-  #include <ESP8266WiFi.h>
-  #include <WiFiClientSecure.h>
-#else // ESP32
-  #include <WiFi.h>
-#endif
-
+#include <ESP8266WiFi.h>
+#include <WiFiClientSecure.h>
+#include <ArduinoJson.h>
 #include <JSON_Decoder.h>
 #include <OpenWeather.h>
 #include <WiFiManager.h>   
 #include <DNSServer.h>
 #include <Adafruit_NeoPixel.h>
 
-#define PIN            D8
-#define NUMPIXELS     30
+#define PIN            4
+#define NUMPIXELS     21
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 // Just using this library for unix time conversion
 #include <Time.h>
+//setup tm1637 display
+#include <TM1637Display.h>
+//math functions
+#include <stdio.h>      /* printf */
+#include <math.h>       /* floor */
+
+//set pins for display
+#define CLK 2//pins definitions for TM1637 and can be changed to other ports       
+#define DIO 13
+TM1637Display display(CLK, DIO);
 
 // =====================================================
 // ========= User configured stuff starts here =========
@@ -43,7 +49,11 @@ OW_Weather ow; // Weather forecast library instance
 void setup() { 
   Serial.begin(9600); // Fast to stop it holding up the stream
 
- 
+  pixels.begin();
+  //set display brightness of tm1637 display
+  display.setBrightness(0x0f);
+  //start 7 seg display
+  display.setSegments(data);
   WiFiManager MyWifiManager;
   MyWifiManager.autoConnect("Weather Frame");
    Serial.println("WiFi connected");
