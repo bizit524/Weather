@@ -52,6 +52,8 @@ void setup() {
   pixels.begin();
   //set display brightness of tm1637 display
   display.setBrightness(0x0f);
+    //setup digit arrary 
+  uint8_t data[] = { 0xff, 0xff, 0xff, 0xff, 0xff, 0xff };
   //start 7 seg display
   display.setSegments(data);
   WiFiManager MyWifiManager;
@@ -99,25 +101,26 @@ void printCurrentWeather()
     Serial.print("sunset           : "); Serial.print(strTime(current->sunset));
     Serial.print("temp             : "); Serial.println(current->temp);
     Serial.print("feels_like       : "); Serial.println(current->feels_like);
-    Serial.print("pressure         : "); Serial.println(current->pressure);
-    Serial.print("humidity         : "); Serial.println(current->humidity);
-    Serial.print("dew_point        : "); Serial.println(current->dew_point);
-    Serial.print("uvi              : "); Serial.println(current->uvi);
-    Serial.print("clouds           : "); Serial.println(current->clouds);
-    Serial.print("visibility       : "); Serial.println(current->visibility);
     Serial.print("wind_speed       : "); Serial.println(current->wind_speed);
-    Serial.print("wind_gust        : "); Serial.println(current->wind_gust);
-    Serial.print("wind_deg         : "); Serial.println(current->wind_deg);
     Serial.print("rain             : "); Serial.println(current->rain);
     Serial.print("snow             : "); Serial.println(current->snow);
     Serial.println();
     Serial.print("id               : "); Serial.println(current->id);
     Serial.print("main             : "); Serial.println(current->main);
     Serial.print("description      : "); Serial.println(current->description);
-    Serial.print("icon             : "); Serial.println(current->icon);
+
 
     Serial.println();
   }
+  float temp_c_float = (current->temp);
+  String  temp_c_string ;
+  temp_c_string = String(temp_c_float);
+  int temp_string_length = temp_c_string.length();
+  
+Serial.println(temp_c_float);
+Serial.println(temp_c_string);
+Serial.println(temp_string_length);
+
 
 
   // Delete to free up space and prevent fragmentation as strings change in length
